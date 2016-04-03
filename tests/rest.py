@@ -5,7 +5,7 @@ import status_check
 
 class AbstractRestTest(object):
 
-    #to enforce the abstract class
+    # to enforce the abstract class
     __metaclass__=ABCMeta
 
     def _create_url(self):
@@ -20,27 +20,26 @@ class AbstractRestTest(object):
 
         return url
 
-    def _get_response(self):
-        url = self._create_url()
-        # consider getting this data from a yaml file
-        headers = {'app-id': '4894f63625ed4dfc809b11ac42c2ae8b', 'Services-Source-Type': 'SDSS-Web', 'Accept': 'application/json'}
-        r = requests.get(url, verify=False, headers=headers)
-        return r
-
     def test_web_service(self):
         self.set_up_web_service_test()
-        r = self._get_response()
+        r = self.get_response()
         status_check.check_statuses(r)
-        self.additional_response_verification()
+        self.additional_response_verification(r)
 
     # add hook to do additional set up, such as add to cart for checkout, etc
     def set_up_web_service_test(self):
         pass
 
     # add hook to do additional response verification
-    def additional_response_verification(self):
+    def additional_response_verification(self, response):
         pass
 
+    # define the verb, get, put, delete, etc
+    @abstractmethod
+    def get_response(self):
+        pass
+
+    # define thee restful url
     @abstractmethod
     def get_url(self):
         pass
