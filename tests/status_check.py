@@ -1,14 +1,14 @@
 def check_statuses(response):
-    check_response_code(response)
-    check_status_message(response)
+    _check_response_code(response)
+    _check_status_message(response)
 
-def check_response_code(response):
+def _check_response_code(response):
     if response.status_code != 200:
         raise ValueError('Response code is not 200, it is:', response.status_code)
     else:
         print('Status is good:', response.status_code)
 
-def check_status_message(response):
+def _check_status_message(response):
     data =  response.json()
     messages = data['messages']
     status_message = messages['status']
