@@ -4,57 +4,64 @@ import os
 import yaml
 
 def init():
-    config_dir = os.path.dirname(__file__)
-    rel_path = 'config.yml'
-    abs_file_path = os.path.join(config_dir, rel_path)
+    dns = 'localhost:8443'
+    url = 'https://{0}/services/search/duvet.do'.format(dns.rstrip())
+    headers = {'app-id': '4894f63625ed4dfc809b11ac42c2ae8b', 'Services-Source-Type': 'SDSS-Web', 'Accept': 'application/json'}
+    resp = requests.get(url, verify=False, headers=headers)
+    print(resp)
+    parsed = json.loads(resp.text)
+    #print(type(parsed))
+    #print(parsed.keys())
+    #print(parsed['messages']['status'])
 
-    with open(abs_file_path, 'r') as ymlfile:
-        cfg = yaml.load(ymlfile)
+    resp_text = resp.text
+    utf_8_response = resp_text.encode('utf8')
 
+    test = get_all(utf_8_response, 'messages')
+    # if you don't encode to a string/utf8 etc it will not parse corectly, since it is unicode
+    #test = get_all(resp.text, 'messages')
 
-    print('------ config-------')
-    configs = cfg[0]
-    print(configs)
-    print('------- common ---------------')
-    common_setting = cfg[1]
-    print(common_setting)
-    print('-------- test -----------')
-    tests = cfg[2]
-    print(tests)
-    print(type(tests))
-    print('-----------  get tests  -----------')
-    test_values = tests['tests']
-    print(test_values)
-    print('-----------  iterate tests  -----------')
-    # iterate the test in tests yaml file
-    for individual_test in test_values:
-        # retrieves the individual test yamls in the tests block
-        test = individual_test['test']
-        # iterate the attributes of the test yaml
-        for params in test:
-            key = params.keys()[0]
-            if key == 'name':
-                print('---------------')
-            #print(key, params[key])
-            print(params[key])
+    sample_json1=[{"globalControlId": 72, "value": 0, "controlId": 2},
+                               {"globalControlId": 77, "value": 3, "controlId": 7}]
+    sample_json2=[{"globalControlId": 72, "value": 0, "controlId": 2},
+                               {"globalControlId": 77, "value": 3, "controlId": 7}]
+
+    print('equals test', sample_json1 == sample_json2)
 
 
+    string_sample_json1="""[{"globalControlId": 72, "value": 0, "controlId": 2},
+                               {"globalControlId": 77, "value": 3, "controlId": 7}]"""
+    string_sample_json2="""[{"globalControlId": 72, "value": 0, "controlId": 2},
+                               {"globalControlId": 77, "value": 3, "controlId": 7}]"""
+    string_sample_json3="""[{"globalControlId": 72,    "value": 0, "controlId": 2},
+                               {"globalControlId": 77, "value":    3,     "controlId": 7}]"""
 
-            #url = 'https://{0}/services/search/duvet.do'.format(dns.rstrip())
+    x = json.loads(string_sample_json1)
+    y = json.loads(string_sample_json2)
+    z = json.loads(string_sample_json3)
 
-    return ''
+    print('json loads equals example', x == y)
+    print('json loads equals example spaces are off', x == z)
 
+    pp = json.dumps(resp.json(), indent=4)
+    print(pp)
 
-def get_requests_ocp_search():
+def get_all(myjson, key):
+    if type(myjson) == str:
+        myjson = json.loads(myjson)
+    if type(myjson) is dict:
+        for jsonkey in myjson:
+            if type(myjson[jsonkey]) in (list, dict):
+                if jsonkey == key:
+                    print(str(myjson[jsonkey]))
+                get_all(myjson[jsonkey], key)
+    elif type(myjson) is list:
+        for item in myjson:
+            if type(item) in (list, dict):
+                get_all(item, key)
 
-    url = create_url()
-#    headers = {'app-id': '4894f63625ed4dfc809b11ac42c2ae8b', 'Services-Source-Type': 'SDSS-Web', 'Accept': 'application/json'}
-#    r = requests.get(url, verify=False, headers=headers)
-#    return r
+init()
 
-resp = get_requests_ocp_search()
-
-#status code
 
 #pretty print
 #parsed = json.dumps(resp.json(), indent=4)

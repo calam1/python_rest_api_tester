@@ -7,7 +7,8 @@
   - test:
     - name: "Basic Search"
     - url: "/services/search/duvet.do"
-    - method: "GET"
+    - method: "GET" #for GETs this tag is not required, if field is not provided then GET is the default behavior
+
   - test: 
     - name: "Basic get"
     - url: "/api/person/"
