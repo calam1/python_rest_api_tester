@@ -1,0 +1,35 @@
+- config:
+    - hostname: 'localhost:8443'
+- common:
+  - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json"}
+- tests:
+  - test:
+    - name: "Basic Search"
+    - url: "/services/search/duvet.do"
+    - method: "GET"
+  - test: 
+    - name: "Basic get"
+    - url: "/api/person/"
+#- test: 
+#    - name: "Get single person"
+#    - url: "/api/person/1/"
+#- test: 
+#    - name: "Delete a single person, verify that works"
+#    - url: "/api/person/1/"
+#    - method: 'DELETE'
+#- test: # create entity by PUT
+#    - name: "Create/update person"
+#    - url: "/api/person/1/"
+#    - method: "PUT"
+#    - body: '{"first_name": "Gaius","id": 1,"last_name": "Baltar","login": "gbaltar"}'
+#    - headers: {'Content-Type': 'application/json'}
+#    - validators:  # This is how we do more complex testing!
+#        - compare: {header: content-type, comparator: contains, expected:'json'}
+#        - compare: {jsonpath_mini: 'login', expected: 'gbaltar'}  # JSON extraction
+#        - compare: {raw_body:"", comparator:contains, expected: 'Baltar' }  # Tests on raw response
+#- test: # create entity by POST
+#    - name: "Create person"
+#    - url: "/api/person/"
+#    - method: "POST"
+#    - body: '{"first_name": "William","last_name": "Adama","login": "theadmiral"}'
+#    - headers: {Content-Type: application/json}

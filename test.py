@@ -3,7 +3,7 @@ import json
 import os
 import yaml
 
-def create_url():
+def init():
     config_dir = os.path.dirname(__file__)
     rel_path = 'config.yml'
     abs_file_path = os.path.join(config_dir, rel_path)
@@ -11,12 +11,6 @@ def create_url():
     with open(abs_file_path, 'r') as ymlfile:
         cfg = yaml.load(ymlfile)
 
-    print('-----------------------------')
-    #print(cfg)
-    print('-----------------------------')
-
-    #for section in cfg:
-    #    print(section['config'])
 
     print('------ config-------')
     configs = cfg[0]
