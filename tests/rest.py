@@ -8,18 +8,6 @@ class AbstractRestTest(object):
     # to enforce the abstract class
     __metaclass__=ABCMeta
 
-    def _create_url(self):
-        configuration_dir = os.path.dirname(__file__)
-        relative_path = 'config.txt'
-        abs_file_path = os.path.join(configuration_dir, relative_path)
-
-        with open(abs_file_path) as f:
-            for dns in f:
-               url = self.get_url() 
-               url = url.format(dns.rstrip())
-
-        return url
-
     def test_web_service(self):
         self.set_up_web_service_test()
         r = self.get_response()
@@ -39,7 +27,3 @@ class AbstractRestTest(object):
     def get_response(self):
         pass
 
-    # define thee restful url
-    @abstractmethod
-    def get_url(self):
-        pass

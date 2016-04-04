@@ -1,6 +1,7 @@
 import os
 import yaml
 import collections
+from rest_get import RestTestGet
 
 def _open_and_load_yaml_file():
     config_dir = os.path.dirname(__file__)
@@ -78,9 +79,10 @@ def init():
     _attributes = _get_test_attributes(_cfg)
 
     for a in _attributes:
-        restful_url = _generate_url(_hostname, a)
-        print(restful_url)
-
-
+        _restful_url = _generate_url(_hostname, a)
+        print(_restful_url)
+        rest_get = RestTestGet(_restful_url, _headers)
+        response = rest_get.get_response()
+        print(response)
 
 init()
