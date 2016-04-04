@@ -43,8 +43,8 @@ def init():
     print('json loads equals example', x == y)
     print('json loads equals example spaces are off', x == z)
 
-    pp = json.dumps(resp.json(), indent=4)
-    print(pp)
+    #pp = json.dumps(resp.json(), indent=4)
+    #print(pp)
 
 def get_all(myjson, key):
     if type(myjson) == str:

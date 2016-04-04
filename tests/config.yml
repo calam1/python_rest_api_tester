@@ -6,10 +6,13 @@
   - test:
     - name: "Basic Search"
     - url: "/services/search/duvet.do"
-    - method: "GET"
-  - test: 
-    - name: "Basic get"
-    - url: "/api/person/"
+    - method: "GET" # for GETs this tag is not required, if field is not provided then GET is the default behavior
+    - validations: # if additional json validation is needed,  basic validation is a 200 response code
+      - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
+      - compare: {"messages": "detail", "comparator": "contains", "expected":"WHATEVER"}
+#  - test: 
+#    - name: "Basic get"
+#    - url: "/api/person/"
 #- test: 
 #    - name: "Get single person"
 #    - url: "/api/person/1/"
@@ -33,3 +36,5 @@
 #    - method: "POST"
 #    - body: '{"first_name": "William","last_name": "Adama","login": "theadmiral"}'
 #    - headers: {Content-Type: application/json}
+
+
