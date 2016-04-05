@@ -16,5 +16,5 @@ class RestTestGet(AbstractRestTest):
         r = requests.get(self.url, verify=False, headers=self.headers)
         return r
 
-    def additional_response_verification(self, response):
-        super(RestTestGet, self).additional_response_verification(response)
+    def additional_response_validation(self, response):
+        super(RestTestGet, self).additional_response_validation(response)

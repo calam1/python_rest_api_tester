@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from json_verification import JsonVerification
 import os
 import requests
 import status_check
@@ -11,7 +12,7 @@ class AbstractRestTest(object):
     def test_web_service(self):
         r = self.get_response()
         status_check.check_statuses(r)
-        self.additional_response_verification(r)
+        self.additional_response_validation(r)
         return r
 
     # just prints the found key, need to add to a collection 
@@ -31,10 +32,12 @@ class AbstractRestTest(object):
 
     # add hook to do additional response verification
     @abstractmethod
-    def additional_response_verification(self, response):
+    def additional_response_validation(self, response):
         resp_text = response.text
         utf_8_response = resp_text.encode('utf8')
-        print('what is comparisons value', self.comparisons)
+        #print('what is comparisons value', self.comparisons)
+        json_verification = JsonVerification(utf_8_response, self.comparisons)
+        json_verification.validate()
 
     # define the verb, get, put, delete, etc
     @abstractmethod
