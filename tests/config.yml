@@ -4,12 +4,20 @@
   - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json"}
 - tests:
   - test:
-    - name: "Basic Search"
+    - name: "Search by keyword"
     - url: "/services/search/duvet.do"
     - method: "GET" # for GETs this tag is not required, if field is not provided then GET is the default behavior
     - validations: # if additional json validation is needed,  basic validation is a 200 response code
       - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
      # - compare: {"messages": "detail", "comparator": "contains", "expected":"WHATEVER"}
+  - test:
+    - name: "Search ensembles by keyword"
+    - url: "/services/search/sheets/ensembles.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
+      - compare: {"values": "brand_name", "comparator": "contains", "expected":"Starter"}
+      - compare: {"values": "refinement_Type_id", "comparator": "contains", "expected":"3"}
 #  - test: 
 #    - name: "Basic get"
 #    - url: "/api/person/"
