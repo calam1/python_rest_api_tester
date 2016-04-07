@@ -9,7 +9,7 @@
     - method: "GET" # for GETs this tag is not required, if field is not provided then GET is the default behavior
     - validations: # if additional json validation is needed,  basic validation is a 200 response code
       - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
-     # - compare: {"messages": "detail", "comparator": "contains", "expected":"WHATEVER"}
+      - compare: {"messages": "detail", "comparator": "contains", "expected":"WHATEVER"}
   - test:
     - name: "Search ensembles by keyword"
     - url: "/services/search/sheets/ensembles.do"

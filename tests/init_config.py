@@ -97,13 +97,9 @@ def init():
     for a in _attributes:
         _restful_url = _generate_url(_hostname, a)
         # when we do the POST we want to create a factory
+        # also multi thread this
         rest_get = RestTestGet(a.name, _restful_url, _headers, a.comparisons)
-
-        #for c in a.comparisons:
-        #    print('chris', c)
-
         response = rest_get.test_web_service()
-        #response = rest_get.get_response()
         print(response)
 
 init()
