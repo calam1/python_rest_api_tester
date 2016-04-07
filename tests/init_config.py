@@ -96,7 +96,6 @@ def init():
 
     for a in _attributes:
         _restful_url = _generate_url(_hostname, a)
-        #print(_restful_url)
         # when we do the POST we want to create a factory
         rest_get = RestTestGet(a.name, _restful_url, _headers, a.comparisons)
 

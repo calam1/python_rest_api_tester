@@ -7,7 +7,6 @@ class JsonVerification:
         self._response = response
         self._comparisons = comparisons
         self._json_messages_from_get_all_matching = None
-        self._actual_value = None
 
     def _retrieve_key_from_comparison(self, comparison):
         ComparisonAttributes = collections.namedtuple('ComparisonAttributes', ['key', 'value',
@@ -29,8 +28,6 @@ class JsonVerification:
             for jsonkey in myjson:
                 if type(myjson[jsonkey]) in (list, dict):
                     if jsonkey == key:
-                        #print('in _get_all_matching function')
-                        #print(str(myjson[jsonkey]))
                         self._json_messages_from_get_all_matching.append(myjson[jsonkey])
                     self._get_all_matching_values_from_response(myjson[jsonkey], key)
         elif type(myjson) is list:
@@ -38,37 +35,50 @@ class JsonVerification:
                 if type(item) in (list, dict):
                     self._get_all_matching_values_from_response(item, key)
 
-
     def _match(self, myjson, key):
         if type(myjson) == str:
             print('json is a string')
             myjson = json.loads(myjson)
         if type(myjson) is dict:
-            for jsonkey in myjson:
-                if str(jsonkey) == key:
-                    #print(str(myjson.get(jsonkey)))
-                    self._actual_value = str(myjson.get(jsonkey))
-                self._match(myjson[jsonkey], key)
+            for k, v in myjson.items():
+                if str(k) == key:
+                    return str(v)
         elif type(myjson) is list:
             for item in myjson:
                 if type(item) in (list, dict):
-                    self._match(item, key)
-
+                    return self._match(item, key)
 
     def _validate_each_comparison(self, comparison_attribute, list_of_json):
         _attribute_value = comparison_attribute.value
         _expected = comparison_attribute.expected
 
+        _local_messages = dict()
+
         for json in list_of_json:
             if isinstance(json, dict) and str(json.get(_attribute_value)) != _expected:
-                print('Comparison failed, the actual value expected does not match the expected')
-                print('actual {}, expected {}'.format(json.get(_attribute_value), _expected))
+                if json.get(_attribute_value) != None:
+                    _failure_msg = 'Comparison failed, the actual value expected does not match the expected actual value: {}, expected value: {}'.format(json.get(_attribute_value), _expected)
+                    _local_messages['failure_wrong_value'] = _failure_msg
+                else:
+                    _failure_msg = 'Comparison failed, the actual value does not exist, the expected value: {}'.format(_expected)
+                    _local_messages['failure_no_value'] = _failure_msg
+
             elif isinstance(json, list):
-                self._match(json, comparison_attribute.value)
-                if self._actual_value == _expected:
-                    print('actual value {} matches expected value {}'.format(self._actual_value, _expected))
+                _key_value = self._match(json, comparison_attribute.value)
+                if _key_value == _expected:
+                    _success_msg = 'actual value: {} matches expected value: {}'.format(_key_value, _expected)
+                    _local_messages['success'] = _success_msg
+                elif _key_value != None:
+                    _failure_msg = 'Comparison failed, the actual value expected does not match the expected, actual: {}, expected: {}'.format(_key_value, _expected)
+                    _local_messages['failure_wrong_value'] = _failure_msg
+                else:
+                    _failure_msg = 'Comparison failed, the actual value does not exist, the expected value {}'.format(_expected)
+                    _local_messages['failure_no_value'] = _failure_msg
             else:
-                print('actual value {} matches expected value {}'.format(json.get(_attribute_value), _expected))
+                _success_msg = 'actual value: {} matches expected value: {}'.format(json.get(_attribute_value), _expected)
+                _local_messages['success'] = _success_msg
+
+        return _local_messages
 
     def validate(self):
         # this is a collection of comparisons in the yaml file
@@ -78,5 +88,13 @@ class JsonVerification:
             comparison_attribute = self._retrieve_key_from_comparison(comparison_value)
             key = comparison_attribute.key
             self._get_all_matching_values_from_response(self._response, key)
-            self._validate_each_comparison(comparison_attribute, self._json_messages_from_get_all_matching)
+            _map_of_messages = self._validate_each_comparison(comparison_attribute, self._json_messages_from_get_all_matching)
+            if _map_of_messages.get('success') != None:
+                print(_map_of_messages.get('success'))
+            elif _map_of_messages.get('failure_wrong_value') != None:
+                print(_map_of_messages.get('failure_wrong_value'))
+            elif _map_of_messages.get('failure_no_value') != None:
+                print(_map_of_messages.get('failure_no_value'))
+            else:
+                raise Exception('Something bad happened, there should be a message')
 

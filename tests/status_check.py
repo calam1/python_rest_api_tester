@@ -1,6 +1,6 @@
 def check_statuses(response):
     _check_response_code(response)
-    _check_status_message(response)
+    #_check_status_message(response)
 
 def _check_response_code(response):
     if response.status_code != 200:
@@ -8,12 +8,12 @@ def _check_response_code(response):
     else:
         print('Status is good:', response.status_code)
 
-def _check_status_message(response):
-    data =  response.json()
-    messages = data['messages']
-    status_message = messages['status']
-
-    if str(status_message) != 'SUCCESS':
-        raise ValueError('Response status message is not successful, response returned was:', status_message)
-    else:
-        print('Response status message is:', str(status_message))
+#def _check_status_message(response):
+#    data =  response.json()
+#    messages = data['messages']
+#    status_message = messages['status']
+#
+#    if str(status_message) != 'SUCCESS':
+#        raise ValueError('Response status message is not successful, response returned was:', status_message)
+#    else:
+#        print('Response status message is:', str(status_message))

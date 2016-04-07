@@ -18,6 +18,7 @@
       - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
       - compare: {"values": "brand_name", "comparator": "contains", "expected":"Starter"}
       - compare: {"values": "refinement_Type_id", "comparator": "contains", "expected":"3"}
+      - compare: {"values": "page_Size", "comparator": "contains", "expected":"24"}
 #  - test: 
 #    - name: "Basic get"
 #    - url: "/api/person/"
