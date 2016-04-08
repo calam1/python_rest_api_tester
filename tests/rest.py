@@ -25,20 +25,20 @@ class AbstractRestTest(object):
         _result_status_messages = list()
 
         for messages in comparison_results:
+            _comparison_results = None
             if messages.get('success') != None:
                 print(messages.get('success'))
                 _comparison_results = ComparisonResults(True, messages.get('success'))
-                _result_status_messages.append(_comparison_results)
             elif messages.get('failure_wrong_value') != None:
                 print(messages.get('failure_wrong_value'))
                 _comparison_results = ComparisonResults(False, messages.get('failure_wrong_value'))
-                _result_status_messages.append(_comparison_results)
             elif messages.get('failure_no_value') != None:
                 print(messages.get('failure_no_value'))
                 _comparison_results = ComparisonResults(True, messages.get('failure_no_value'))
-                _result_status_messages.append(_comparison_results)
             else:
                 raise Exception('Something bad happened, there should be a message')
+
+            _result_status_messages.append(_comparison_results)
 
         return _result_status_messages
 

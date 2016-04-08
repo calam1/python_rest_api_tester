@@ -10,11 +10,12 @@ class JsonVerification:
 
     def _retrieve_comparisons(self, comparison):
         ComparisonAttributes = collections.namedtuple('ComparisonAttributes', ['key', 'value', 'expected', 'comparator'])
+
         #there is only one key per compare, all other attributes are of informational or expected values, etc
-        for attribute in comparison:
-            if attribute != 'expected' and attribute != 'comparator':
-                _comparison_attributes = ComparisonAttributes(attribute, comparison[attribute], comparison['expected'], comparison['comparator'])
-                return _comparison_attributes
+        _key = filter(lambda a: a != 'expected' and a != 'comparator', comparison)
+        for k in _key:
+            _comparison_attributes = ComparisonAttributes(k, comparison[k], comparison['expected'], comparison['comparator'])
+            return _comparison_attributes
 
     def _get_comparison(self, comparison):
             _comparison_value = comparison['compare']

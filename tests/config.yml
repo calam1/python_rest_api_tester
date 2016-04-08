@@ -17,7 +17,8 @@
     - validations:
       - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
       - compare: {"values": "brand_name", "expected":"Starter", "comparator": "contains"}
-      - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"}
+#      - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"}
+      - compare: {"values": "display_price", "expected":"$70.00", "comparator": "contains"}
       - compare: {"values": "page_Size", "expected":24, "comparator": "contains"}
 #  - test: 
 #    - name: "Basic get"
