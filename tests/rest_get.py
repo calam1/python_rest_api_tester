@@ -9,6 +9,7 @@ class RestTestGet(AbstractRestTest):
         self._url = url
         self._headers = headers
         self._comparisons = comparisons
+        self._results = None
 
     def get_response(self):
         r = requests.get(self._url, verify=False, headers=self._headers)

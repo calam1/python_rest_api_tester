@@ -21,15 +21,13 @@ class JsonVerification:
             _comparison_attribute = self._retrieve_comparisons(_comparison_value)
             return _comparison_attribute
 
-            return _key
-
     def validate(self):
         _list_of_results_from_comparisons = list()
 
         # this is a collection of the compare yamls in the config.yml file
         for comparison in self._comparisons:
-            _filter_json = FilterJson()
             _comparison_attribute = self._get_comparison(comparison)
+            _filter_json = FilterJson()
             _filtered_json = _filter_json.filter_json(self._response, _comparison_attribute.key)
             _validate_comparison = ValidateComparison()
             _map_of_messages = _validate_comparison.validate_against_response(_comparison_attribute, _filtered_json)

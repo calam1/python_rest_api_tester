@@ -6,13 +6,13 @@ class ValidateComparison:
         self._local_messages = dict()
 
     def _match(self, myjson, key):
-        if type(myjson) == str:
-            print('json is a string')
-            myjson = json.loads(myjson)
+        #if type(myjson) == str:
+        #    print('json is a string')
+        #    myjson = json.loads(myjson)
         if type(myjson) is dict:
             for k, v in myjson.items():
-                if str(k) == key:
-                    return str(v)
+                if k == key:
+                    return v
         elif type(myjson) is list:
             for item in myjson:
                 if type(item) in (list, dict):
@@ -29,7 +29,7 @@ class ValidateComparison:
         for json in list_of_json:
             # hopefully I can abstract out this ugliness into a Factory when I build an object
             # containing all the info I want per test, otherwise this is a bit ugly
-            if isinstance(json, dict) and str(json.get(_attribute_value)) != _expected:
+            if isinstance(json, dict) and json.get(_attribute_value) != _expected:
                 if json.get(_attribute_value) != None:
                     _failure_msg = 'Comparison failed, the actual value expected does not match the expected actual value: {}, expected value: {}'.format(json.get(_attribute_value), _expected)
                     self._local_messages['failure_wrong_value'] = _failure_msg

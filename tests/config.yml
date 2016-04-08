@@ -8,17 +8,17 @@
     - url: "/services/search/duvet.do"
     - method: "GET" # for GETs this tag is not required, if field is not provided then GET is the default behavior
     - validations: # if additional json validation is needed,  basic validation is a 200 response code
-      - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
-      - compare: {"messages": "detail", "comparator": "contains", "expected":"WHATEVER"}
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+      - compare: {"messages": "detail", "expected":"WHATEVER", "comparator": "contains"} # this will fail
   - test:
     - name: "Search ensembles by keyword"
     - url: "/services/search/sheets/ensembles.do"
     - method: "GET"
     - validations:
-      - compare: {"messages": "status", "comparator": "contains", "expected":"SUCCESS"}
-      - compare: {"values": "brand_name", "comparator": "contains", "expected":"Starter"}
-      - compare: {"values": "refinement_Type_id", "comparator": "contains", "expected":"3"}
-      - compare: {"values": "page_Size", "comparator": "contains", "expected":"24"}
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+      - compare: {"values": "brand_name", "expected":"Starter", "comparator": "contains"}
+      - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"}
+      - compare: {"values": "page_Size", "expected":24, "comparator": "contains"}
 #  - test: 
 #    - name: "Basic get"
 #    - url: "/api/person/"
