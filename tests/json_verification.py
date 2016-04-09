@@ -6,7 +6,10 @@ class JsonVerification:
 
     def __init__(self, response, comparisons):
         self._response = response
-        self._comparisons = comparisons
+        if comparisons is None:
+            self._comparisons = list()
+        else:
+            self._comparisons = comparisons
 
     def _retrieve_comparisons(self, comparison):
         ComparisonAttributes = collections.namedtuple('ComparisonAttributes', ['key', 'value', 'expected', 'comparator'])

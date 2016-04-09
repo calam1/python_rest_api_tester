@@ -47,7 +47,7 @@ class ValidateComparison:
                 else:
                     _failure_msg = 'Comparison failed, the actual value does not exist, the expected value {}'.format(_expected)
                     self._local_messages['failure_no_value'] = _failure_msg
-            else:
+            elif json.get(_attribute_value) == _expected:
                 _success_msg = 'actual value: {} matches expected value: {}'.format(json.get(_attribute_value), _expected)
                 self._local_messages['success'] = _success_msg
 
