@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from json_verification import JsonVerification
-import collections
+import comparison_result_factory
 import re
 
 class AbstractRestTest(object):
@@ -15,7 +15,6 @@ class AbstractRestTest(object):
         return _response
 
     def _manage_results(self, response, comparison_results):
-        ComparisonResults = collections.namedtuple('ComparisonResults', ['isPass', 'message'])
         _result_status_messages = list()
 
         # absstract this out to own method at the very least
@@ -31,22 +30,12 @@ class AbstractRestTest(object):
         _resp_text = response.text
         _is_not_found = re.search('not_found.jsp', _resp_text)
         if _is_not_found is not None:
-            _response_error_results = ComparisonResults(False, 'Web Service is not found.')
+            _response_error_results = comparison_result_factory.ComparisonResults(False, 'Web Service is not found.')
             _result_status_messages.append(_response_error_results)
 
         for messages in comparison_results:
-            # this can probably be encapsulated into a factory
-            _comparison_results = None
-            if messages.get('success') != None:
-                _comparison_results = ComparisonResults(True, messages.get('success'))
-            elif messages.get('failure_wrong_value') != None:
-                _comparison_results = ComparisonResults(False, messages.get('failure_wrong_value'))
-            elif messages.get('failure_no_value') != None:
-                _comparison_results = ComparisonResults(False, messages.get('failure_no_value'))
-            else:
-                raise Exception('Something bad happened, there should be a message')
-
-            _result_status_messages.append(_comparison_results)
+            _comparison_result = comparison_result_factory.build_comparison_result(messages)
+            _result_status_messages.append(_comparison_result)
 
         return _result_status_messages
 
