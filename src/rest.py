@@ -18,6 +18,7 @@ class AbstractRestTest(object):
         ComparisonResults = collections.namedtuple('ComparisonResults', ['isPass', 'message'])
         _result_status_messages = list()
 
+        # absstract this out to own method at the very least
         if response.status_code != 200:
             response_status_code_error = 'Error occurred, service has an issue, response code is: {}'.format(response.status_code)
             print(response_status_code_error)
@@ -26,7 +27,7 @@ class AbstractRestTest(object):
             return _result_status_messages
 
         # due to the crappy way we implemented web services we almost always get a 200 unless the
-        # server is down
+        # server is down, this should be a special branch and not in master
         _resp_text = response.text
         _is_not_found = re.search('not_found.jsp', _resp_text)
         if _is_not_found is not None:
