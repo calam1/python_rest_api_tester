@@ -48,20 +48,18 @@ def get_test_attributes(cfg):
         _method = None
         _comparisons = None
 
-        # maybe use filter to pull out keys and data
         for params in _test:
-            key = params.keys()[0]
-            if key == 'name':
-                _name = params[key]
+            if len(filter(lambda x: x == 'name', params)) != 0:
+                _name = params.values()[0]
 
-            if key == 'url':
-                _url = params[key]
+            if len(filter(lambda x: x == 'url', params)) != 0:
+                _url = params.values()[0]
 
-            if key == 'method':
-                _method = params[key]
+            if len(filter(lambda x: x == 'method', params)) != 0:
+                _method = params.values()[0]
 
-            if key == 'validations':
-                _validations = params[key]
+            if len(filter(lambda x: x == 'validations', params)) != 0:
+                _validations = params.values()[0]
                 _comparisons = _get_comparisons(_validations)
 
         _test_attribute = TestAttributes(_name, _url, _method, _comparisons)

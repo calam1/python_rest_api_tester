@@ -10,9 +10,6 @@ class ValidateComparison:
         self.SUCCESS = 'success'
 
     def _match(self, myjson, key):
-        #if type(myjson) == str:
-        #    print('json is a string')
-        #    myjson = json.loads(myjson)
         if type(myjson) is dict:
             for k, v in myjson.items():
                 if k == key:
@@ -42,7 +39,7 @@ class ValidateComparison:
 
     def _populate_actual_not_equal_expected_failure_messages(self, json, attribute_value, expected):
         if json.get(attribute_value) != None:
-            _failure_msg = 'Comparison failed, the actual value expected does not match the expected actual value: {}, expected value: {}'.format(json.get(attribute_value), _expected)
+            _failure_msg = 'Comparison failed, the actual value expected does not match the expected actual value: {}, expected value: {}'.format(json.get(attribute_value), expected)
             self._local_messages[self.FAILURE_WRONG_VALUE] = _failure_msg
         else:
             _failure_msg = 'Comparison failed, the actual value does not exist, the expected value: {}'.format(expected)
