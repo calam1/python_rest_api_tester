@@ -21,7 +21,7 @@
       - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"} #sometimes this fails, not due to the test, the response is not consistent
       - compare: {"values": "display_price", "expected":"$70.00", "comparator": "contains"}
       - compare: {"values": "page_Size", "expected":24, "comparator": "contains"}
-  - test: 
+  - test: # this test will fail, purposely done for testing 
     - name: "Basic get"
     - url: "/api/person/"
 #- test: 
