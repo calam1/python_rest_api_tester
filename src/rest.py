@@ -9,36 +9,36 @@ class AbstractRestTest(object):
     __metaclass__= ABCMeta
 
     def test_web_service(self):
-        _response = self.get_response()
-        _bad_status = self._check_status_code(_response)
+        response = self.get_response()
+        bad_status = self._check_status_code(response)
         # if status code is bad, no need to do additional validation
-        if _bad_status is not None:
-            return _response
+        if bad_status is not None:
+            return response
         else:
-            self.additional_response_validation(_response)
-            return _response
+            self.additional_response_validation(response)
+            return response
 
     def _manage_results(self, response, comparison_results):
-        _result_status_messages = list()
+        result_status_messages = list()
 
         for messages in comparison_results:
-            _comparison_result = comparison_result_factory.build_comparison_result(messages)
-            _result_status_messages.append(_comparison_result)
+            comparison_result = comparison_result_factory.build_comparison_result(messages)
+            result_status_messages.append(comparison_result)
 
-        return _result_status_messages
+        return result_status_messages
 
     def _check_status_code(self, response):
-        _result_status_messages = None
+        result_status_messages = None
 
         if response.status_code != 200:
-            _result_status_messages = list()
+            result_status_messages = list()
             response_status_code_error = 'Error occurred, service has an issue, response code is: {}'.format(response.status_code)
-            _response_error_results = comparison_result_factory.ComparisonResults(False, response_status_code_error)
-            _result_status_messages.append(_response_error_results)
+            response_error_results = comparison_result_factory.ComparisonResults(False, response_status_code_error)
+            result_status_messages.append(response_error_results)
             # set error message to test object, additional_repsonse_validation will not run, so we
             # need to set the failure value
-            self.results = _result_status_messages
-            return _result_status_messages
+            self.results = result_status_messages
+            return result_status_messages
 
         # this should not exist for any web service, except for the incorrect way we implemented it
         return self._odd_error(response)
@@ -48,26 +48,26 @@ class AbstractRestTest(object):
         # server is down, this should be a special branch and not in master
         # so you have to check for something all the time for our services, since http return code
         # is not accurate
-        _result_status_messages = None
+        result_status_messages = None
 
-        _resp_text = response.text
-        _is_not_found = re.search('not_found.jsp', _resp_text)
-        if _is_not_found is not None:
-            _result_status_messages = list()
-            _response_error_results = comparison_result_factory.ComparisonResults(False, 'Web Service is not found.')
-            _result_status_messages.append(_response_error_results)
-            self.results = _result_status_messages
+        resp_text = response.text
+        is_not_found = re.search('not_found.jsp', resp_text)
+        if is_not_found is not None:
+            result_status_messages = list()
+            response_error_results = comparison_result_factory.ComparisonResults(False, 'Web Service is not found.')
+            result_status_messages.append(response_error_results)
+            self.results = result_status_messages
 
-        return _result_status_messages
+        return result_status_messages
 
     @abstractmethod
     def additional_response_validation(self, response):
         resp_text = response.text
         utf_8_response = resp_text.encode('utf8')
-        _json_verification = JsonVerification(utf_8_response, self._comparisons)
-        _verification_results = _json_verification.validate()
-        _result_status_message = self._manage_results(response, _verification_results)
-        self.results = _result_status_message
+        json_verification = JsonVerification(utf_8_response, self.comparisons)
+        verification_results = json_verification.validate()
+        result_status_message = self._manage_results(response, verification_results)
+        self.results = result_status_message
 
     # define the verb, get, put, delete, etc
     @abstractmethod

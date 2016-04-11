@@ -1,6 +1,6 @@
 ---
 - config:
-    - hostname: 'localhost:8443'
+    - hostname: 'wboocp15dev.us.oracle.com'
 - common:
   - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json"}
 - tests:
@@ -21,7 +21,7 @@
       - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"} #sometimes this fails, not due to the test, the response is not consistent
       - compare: {"values": "display_price", "expected":"$70.00", "comparator": "contains"}
       - compare: {"values": "page_Size", "expected":24, "comparator": "contains"}
-  - test: # this test will fail, purposely done for testing 
+  - test: 
     - name: "Basic get"
     - url: "/api/person/"
 #- test: 

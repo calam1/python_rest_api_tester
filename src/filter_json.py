@@ -3,11 +3,11 @@ import json
 class FilterJson:
 
     def __init__(self):
-        self._json_messages_from_get_all_matching = list()
+        self.json_messages_from_get_all_matching = list()
 
     def filter_json(self, myjson, key):
         self._get_all_matching_values_from_response(myjson, key)
-        return self._json_messages_from_get_all_matching
+        return self.json_messages_from_get_all_matching
 
     #http://stackoverflow.com/questions/14048948/how-can-i-use-python-finding-particular-json-value-by-key
     def _get_all_matching_values_from_response(self, myjson, key):
@@ -17,7 +17,7 @@ class FilterJson:
             for jsonkey in myjson:
                 if type(myjson[jsonkey]) in (list, dict):
                     if jsonkey == key:
-                        self._json_messages_from_get_all_matching.append(myjson[jsonkey])
+                        self.json_messages_from_get_all_matching.append(myjson[jsonkey])
                     self._get_all_matching_values_from_response(myjson[jsonkey], key)
         elif type(myjson) is list:
             for item in myjson:
