@@ -4,6 +4,7 @@
 - common:
   - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json"}
 - tests:
+# testing of stuff
   - test:
     - name: "Search by keyword"
     - url: "/services/search/duvet.do"
@@ -24,6 +25,83 @@
   - test: 
     - name: "Basic get"
     - url: "/api/person/"
+# category services
+  - test:
+    - name: "Get the Category Hierarchy based on the depth"
+    - url: "/services/category/categoryHierarchy/2.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the Category Hierarchy based on the depth"
+    - url: "/services/category/categories.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the Categories"
+    - url: "/services/category/categories.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+      - compare: {"values": "path", "expected":"New Arrivals", "comparator": "contains"}
+  - test:
+    - name: "Get the Category Hierarchy for the category id"
+    - url: "/services/category/2184.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+      - compare: {"sub_categories": "name", "expected":"Jewelry", "comparator": "contains"}
+  - test:
+    - name: "Get the ensembles related to the category for the category id"
+    - url: "/services/category/2184/ensembles.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the products and ensembles related to the category for the category id"
+    - url: "/services/category/2184/entities.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the products related to the category for the category id"
+    - url: "/services/category/2184/products.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+# ensemble services
+  - test:
+    - name: "Get the cross sell products and ensembles associates with the ensemble from the ensemble identifier"
+    - url: "/services/ensemble/59/cross_sell_entities.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the ensemble from the ensemble identifier"
+    - url: "/services/ensemble/59.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the categories that the ensemble is in from the ensemeble identifier"
+    - url: "/services/ensemble/59/categories.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the up sell products and emsembles associated with the ensemble from the ensemble identifier"
+    - url: "/services/ensemble/59/up_sell_entities.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+  - test:
+    - name: "Get the inventory for the SKU"
+    - url: "/services/locateSkuInventory/1327333333/1/DELIVERY.do"
+    - method: "GET"
+    - validations:
+      - compare: {"messages": "status", "expected":"FAILED", "comparator": "contains"} # odd test, I can't find a proper sku and delivery combination
+
 #- test: 
 #    - name: "Get single person"
 #    - url: "/api/person/1/"
