@@ -3,10 +3,9 @@ from json_verification import JsonVerification
 import comparison_result_factory
 import re
 
-class AbstractRestTest(object):
 
-    # to enforce the abstract class
-    __metaclass__= ABCMeta
+class AbstractRestTest(object):
+    __metaclass__ = ABCMeta
 
     def test_web_service(self):
         response = self.get_response()
@@ -18,21 +17,14 @@ class AbstractRestTest(object):
             self.additional_response_validation(response)
             return response
 
-    def _manage_results(self, response, comparison_results):
-        result_status_messages = list()
-
-        for messages in comparison_results:
-            comparison_result = comparison_result_factory.build_comparison_result(messages)
-            result_status_messages.append(comparison_result)
-
-        return result_status_messages
+    def _manage_results(self, comparison_results):
+        return [comparison_result_factory.build_comparison_result(messages) for messages in comparison_results]
 
     def _check_status_code(self, response):
-        result_status_messages = None
-
         if response.status_code != 200:
             result_status_messages = list()
-            response_status_code_error = 'Error occurred, service has an issue, response code is: {}'.format(response.status_code)
+            response_status_code_error = 'Error occurred, service has an issue, response code is: {}'.format(
+                response.status_code)
             response_error_results = comparison_result_factory.ComparisonResults(False, response_status_code_error)
             result_status_messages.append(response_error_results)
             # set error message to test object, additional_repsonse_validation will not run, so we
@@ -66,11 +58,10 @@ class AbstractRestTest(object):
         utf_8_response = resp_text.encode('utf8')
         json_verification = JsonVerification(utf_8_response, self.comparisons)
         verification_results = json_verification.validate()
-        result_status_message = self._manage_results(response, verification_results)
+        result_status_message = self._manage_results(verification_results)
         self.results = result_status_message
 
     # define the verb, get, put, delete, etc
     @abstractmethod
     def get_response(self):
         pass
-

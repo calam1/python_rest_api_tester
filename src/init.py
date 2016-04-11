@@ -24,18 +24,13 @@ def main():
     # print results to the console
     _process_results_for_console(list_of_all_results)
 
-def _run_tests(attributes, hostname, headers):
-    rest_test_get_results = list()
-    # looping through the loaded yaml file and running the tests and saving the results off
-    for attr in attributes:
-        restful_url = open_and_load_config.generate_url(hostname, attr)
-        # when we do the POST we want to create a factory to return RestTestGet, TestTestPost, etc
-        # also multi thread this, use the ThreadPoolExecutor
-        rest_get = RestTestGet(attr.name, restful_url, headers, attr.comparisons)
-        response = rest_get.test_web_service()
-        rest_test_get_results.append(rest_get)
 
-    return rest_test_get_results
+def _run_tests(attributes, hostname, headers):
+    rest_tests = [RestTestGet(attr.name, open_and_load_config.generate_url(hostname, attr), headers, attr.comparisons)
+                  for attr in attributes]
+    [rest_test.test_web_service() for rest_test in rest_tests]
+    return rest_tests
+
 
 def _assemble_results_with_test_attributes(rest_test_get_results):
     list_of_all_results = list()
@@ -46,25 +41,33 @@ def _assemble_results_with_test_attributes(rest_test_get_results):
     # list of RestTestGet objects
     for rest_test_get in rest_test_get_results:
         # each object's list of validation results
-        rest_tests = rest_test_get.results
-        for results in rest_tests:
-            rest_api_test_result = RestAPITestResult(rest_test_get.name, rest_test_get.url, results.isPass, results.message)
-            list_of_all_results.append(rest_api_test_result)
+        [list_of_all_results.append(
+            [RestAPITestResult(rest_test_get.name, rest_test_get.url, results.isPass, results.message) for results in
+             rest_test_get.results][counter]) for counter in range(len(rest_test_get.results))]
 
     return list_of_all_results
+
 
 def _process_results_for_console(list_of_all_results):
     # print results to the console
     print('---------------------------- FAILURES ---------------------------------')
     failures = filter(lambda x: x.isPass is False, list_of_all_results)
     for results in failures:
-        print('The test we ran is named: {} and the URL is: {} and it passed: {}, the message was: {}'.format(results.name, results.url, results.isPass, results.message))
+        print(
+        'The test we ran is named: {} and the URL is: {} and it passed: {}, the message was: {}'.format(results.name,
+                                                                                                        results.url,
+                                                                                                        results.isPass,
+                                                                                                        results.message))
 
     print('---------------------------- SUCCESSES ---------------------------------')
     success = filter(lambda x: x.isPass is True, list_of_all_results)
     for results in success:
-        print('The test we ran is named: {} and the URL is: {} and it passed: {}, the message was: {}'.format(results.name, results.url, results.isPass, results.message))
+        print(
+        'The test we ran is named: {} and the URL is: {} and it passed: {}, the message was: {}'.format(results.name,
+                                                                                                        results.url,
+                                                                                                        results.isPass,
+                                                                                                        results.message))
 
 
-if __name__ ==  '__main__':
+if __name__ == '__main__':
     main()

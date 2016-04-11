@@ -3,8 +3,6 @@ import collections
 ComparisonResults = collections.namedtuple('ComparisonResults', ['isPass', 'message'])
 
 def build_comparison_result(messages):
-
-    comparison_results = None
     if messages.get('success') != None:
         comparison_results = ComparisonResults(True, messages.get('success'))
     elif messages.get('failure_wrong_value') != None:
