@@ -1,6 +1,8 @@
-import open_and_load_config
 import collections
+import concurrent.futures
+import open_and_load_config
 from rest_get import RestTestGet
+
 
 
 def main():
@@ -28,7 +30,24 @@ def main():
 def _run_tests(attributes, hostname, headers):
     rest_tests = [RestTestGet(attr.name, open_and_load_config.generate_url(hostname, attr), headers, attr.comparisons)
                   for attr in attributes]
-    [rest_test.test_web_service() for rest_test in rest_tests]
+
+    # don't loop anymore run multithread
+    #[rest_test.test_web_service() for rest_test in rest_tests]
+
+    # multi thread processing with futures
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        future_rest_test = {executor.submit(rest_test.test_web_service): rest_test.url for rest_test in rest_tests}
+        for future in concurrent.futures.as_completed(future_rest_test):
+            #we don't use this data explicitly, it is saved within the object, but can be used for
+            #debug, but is needed to block so that we can process the complete list when it is done
+            rest_test_result = future_rest_test[future]
+            try:
+                data = future.result()
+            except Exception as exc:
+                print("Error")
+                print(exc.message)
+
+    # the above loop blocks until we are done, then it runs the following return statement
     return rest_tests
 
 
