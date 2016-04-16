@@ -2,7 +2,7 @@ import collections
 import concurrent.futures
 import open_and_load_config
 from rest_get import RestTestGet
-
+from rest_post import RestTestPost
 
 
 def main():
@@ -26,9 +26,19 @@ def main():
     # print results to the console
     _process_results_for_console(list_of_all_results)
 
+def _get_rest_test_objects(hostname, headers, attribute):
+    url = open_and_load_config.generate_url(hostname, attribute)
+    prep_tests = [_get_rest_test_objects(hostname, headers, attr) for attr in attribute.prep_states]
+    verb = attribute.method
+
+    if verb == 'GET':
+        return RestTestGet(attribute.name, prep_tests, url, headers, attribute.comparisons)
+    elif verb == 'POST':
+        return RestTestPost(attribute.name, prep_tests, url, headers, attribute.payload, attribute.comparisons)
 
 def _run_tests(attributes, hostname, headers):
-    rest_tests = [RestTestGet(attr.name, open_and_load_config.generate_url(hostname, attr), headers, attr.comparisons)
+    #rest_tests = [_get_rest_test_objects(open_and_load_config.generate_url(hostname, attr), headers, attr)
+    rest_tests = [_get_rest_test_objects(hostname, headers, attr)
                   for attr in attributes]
 
     # don't loop anymore run multithread
@@ -44,12 +54,10 @@ def _run_tests(attributes, hostname, headers):
             try:
                 data = future.result()
             except Exception as exc:
-                print("Error")
-                print(exc.message)
+                print('Error testing web service', exc.message)
 
     # the above loop blocks until we are done, then it runs the following return statement
     return rest_tests
-
 
 def _assemble_results_with_test_attributes(rest_test_get_results):
     list_of_all_results = list()

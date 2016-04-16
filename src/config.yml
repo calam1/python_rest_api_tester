@@ -1,8 +1,8 @@
 ---
 - config:
-    - hostname: 'localhost:8443'
+    - hostname: "localhost:8443"
 - common:
-  - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json"}
+  - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json", "Content-Type": "application/json"}
 - tests:
 # testing of stuff
   - test:
@@ -22,9 +22,23 @@
       - compare: {"values": "refinement_Type_id", "expected":"3", "comparator": "contains"} #sometimes this fails, not due to the test, the response is not consistent
       - compare: {"values": "display_price", "expected":"$70.00", "comparator": "contains"}
       - compare: {"values": "page_Size", "expected":24, "comparator": "contains"}
-  - test: 
-    - name: "Basic get"
+  - test: # this will fail since it does not exist
+    - name: "Basic get" 
     - url: "/api/person/"
+    - method: "GET"
+  - test:
+    - name: "Add item to cart"
+    - prep_state:
+      - name: "Clear shopping cart"
+      - url: "/services/checkout/clearBasket.do"
+      - method: "GET"
+      - validations:
+        - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+    - url: "/services/checkout/addItem.do"
+    - method: "POST"
+    - payload: '{"quantity": "1", "productVariantId": "1322"}'
+    - validations:
+      - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
 # category services
   - test:
     - name: "Get the Category Hierarchy based on the depth"
@@ -101,7 +115,6 @@
     - method: "GET"
     - validations:
       - compare: {"messages": "status", "expected":"FAILED", "comparator": "contains"} # odd test, I can't find a proper sku and delivery combination
-
 #- test: 
 #    - name: "Get single person"
 #    - url: "/api/person/1/"
@@ -125,5 +138,3 @@
 #    - method: "POST"
 #    - body: '{"first_name": "William","last_name": "Adama","login": "theadmiral"}'
 #    - headers: {Content-Type: application/json}
-
-

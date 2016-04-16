@@ -2,19 +2,20 @@ from abc import ABCMeta, abstractmethod
 from rest import AbstractRestTest
 import requests
 
-class RestTestGet(AbstractRestTest):
+class RestTestPost(AbstractRestTest):
 
-    def __init__(self, name, prep_state_tests, url, headers, comparisons):
+    def __init__(self, name, prep_state_tests, url, headers, payload, comparisons):
         self.name = name
         self.prep_state_tests = prep_state_tests
         self.url = url
         self.headers = headers
+        self.payload = payload
         self.comparisons = comparisons
         self.results = None
 
     def get_response(self):
-        response = requests.get(self.url, verify=False, headers=self.headers)
+        response = requests.post(self.url, verify=False, headers=self.headers, data=self.payload)
         return response
 
     def additional_response_validation(self, response):
-        super(RestTestGet, self).additional_response_validation(response)
+        super(RestTestPost, self).additional_response_validation(response)

@@ -3,11 +3,16 @@ from json_verification import JsonVerification
 import comparison_result_factory
 import re
 
-
 class AbstractRestTest(object):
+
     __metaclass__ = ABCMeta
 
     def test_web_service(self):
+        if self.prep_state_tests:
+            resps = [rest_test.test_web_service() for rest_test in self.prep_state_tests]
+            print('Prep state results')
+            print('Test named:', self.name, 'has this REST api called before itself:', self.prep_state_tests[0].name,  self.prep_state_tests[0].results)
+
         response = self.get_response()
         bad_status = self._check_status_code(response)
         # if status code is bad, no need to do additional validation
