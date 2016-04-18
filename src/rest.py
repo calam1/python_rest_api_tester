@@ -8,10 +8,18 @@ class AbstractRestTest(object):
     __metaclass__ = ABCMeta
 
     def test_web_service(self):
+
+        # this is used in the case we depend on state on the server side in the session
+        pipeline_session_uuid = None
+
         if self.prep_state_tests:
             resps = [rest_test.test_web_service() for rest_test in self.prep_state_tests]
-            print('Prep state results')
-            print('Test named:', self.name, 'has this REST api called before itself:', self.prep_state_tests[0].name,  self.prep_state_tests[0].results)
+            # if there is existing state we need to get the session id
+            pipeline_session_uuid = resps[0].json().get('dataset').get('pipelineSession').get('values').get('pipeline_session_uuid')
+
+        if pipeline_session_uuid:
+            str_pipeline_session_uuid = str(pipeline_session_uuid)
+            self.cookies = dict(PIPELINE_SESSION_ID=str_pipeline_session_uuid)
 
         response = self.get_response()
         bad_status = self._check_status_code(response)

@@ -11,10 +11,12 @@ class RestTestPost(AbstractRestTest):
         self.headers = headers
         self.payload = payload
         self.comparisons = comparisons
+        self.cookies = None
         self.results = None
 
     def get_response(self):
-        response = requests.post(self.url, verify=False, headers=self.headers, data=self.payload)
+        response = requests.post(self.url, verify=False, headers=self.headers, data=self.payload,
+                                 cookies=self.cookies)
         return response
 
     def additional_response_validation(self, response):
