@@ -61,7 +61,6 @@ def _build_test_attributes(test):
 
         if (filter(lambda x: x == 'prep_state', params)):
             prep_state = params.values()[0]
-            #TODO will probably need to loop through this but for now it works
             test_attribute = _build_test_attributes(prep_state)
             prep_states.append(test_attribute)
 
@@ -75,8 +74,8 @@ def _build_test_attributes(test):
             payload = params.values()[0]
 
         if len(filter(lambda x: x == 'validations', params)):
-            _validations = params.values()[0]
-            comparisons = _get_comparisons(_validations)
+            validations = params.values()[0]
+            comparisons = _get_comparisons(validations)
 
     test_attribute = TestAttributes(name, prep_states, url, method, payload, comparisons)
 

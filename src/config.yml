@@ -1,14 +1,14 @@
 ---
 - config:
-    - hostname: "localhost:8443"
+    - hostname: "wboocp15dev.us.oracle.com"
 - common:
   - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json", "Content-Type": "application/json"}
 - tests:
-# testing of stuff
+# testing examples
   - test:
     - name: "Search by keyword"
     - url: "/services/search/duvet.do"
-    - method: "GET" # for GETs this tag is not required, if field is not provided then GET is the default behavior
+    - method: "GET"
     - validations: # if additional json validation is needed,  basic validation is a 200 response code
       - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
       - compare: {"messages": "detail", "expected":"WHATEVER", "comparator": "contains"} # this will fail
@@ -28,6 +28,12 @@
     - method: "GET"
   - test:
     - name: "Add item to cart and check basket count"
+    - prep_state: # we don't really have to clear the cart first for this test, but just creating a scenario where we have multiple steps in prep_state, if we flip flop clear basket and add item the test will fail
+      - name: "Clear basket"
+      - url: "/services/checkout/clearBasket.do"
+      - method: "GET"
+      - validations:
+        - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
     - prep_state:
       - name: "Add item to cart"
       - url: "/services/checkout/addItem.do"
@@ -35,12 +41,18 @@
       - payload: '{"quantity": "1", "productVariantId": "1322"}'
       - validations:
         - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
+    # - prep_state: # we don't really have to clear the cart first for this test, but just creating a scenario where we have multiple steps in prep_state, if we flip flop clear basket and add item the test will fail
+    #   - name: "Clear basket"
+    #   - url: "/services/checkout/clearBasket.do"
+    #   - method: "GET"
+    #   - validations:
+    #     - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
     - url: "/services/checkout/itemCount.do"
     - method: "GET"
     - validations:
       - compare: {"messages": "status", "expected":"SUCCESS", "comparator": "contains"}
       - compare: {"values": "cart_item_count", "expected":1, "comparator": "contains"}
-# category services
+#category services
   - test:
     - name: "Get the Category Hierarchy based on the depth"
     - url: "/services/category/categoryHierarchy/2.do"
