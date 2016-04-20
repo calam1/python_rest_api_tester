@@ -13,6 +13,9 @@ def main():
     hostname = open_and_load_config.get_host_name(cfg)
     headers = open_and_load_config.get_headers(cfg)
 
+    #TEST
+    open_and_load_config.get_includes(cfg)
+
     # a collection of different tests, with their respective REST urls, etc
     attributes = open_and_load_config.get_test_attributes(cfg)
 
@@ -37,7 +40,6 @@ def _get_rest_test_objects(hostname, headers, attribute):
         return RestTestPost(attribute.name, prep_tests, url, headers, attribute.payload, attribute.comparisons)
 
 def _run_tests(attributes, hostname, headers):
-    #rest_tests = [_get_rest_test_objects(open_and_load_config.generate_url(hostname, attr), headers, attr)
     rest_tests = [_get_rest_test_objects(hostname, headers, attr)
                   for attr in attributes]
 

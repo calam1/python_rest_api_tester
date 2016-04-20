@@ -1,8 +1,11 @@
 ---
 - config:
-    - hostname: "wboocp15dev.us.oracle.com"
+    - hostname: "localhost:8443"
 - common:
   - headers: {"app-id": "4894f63625ed4dfc809b11ac42c2ae8b", "Services-Source-Type": "SDSS-Web", "Accept": "application/json", "Content-Type": "application/json"}
+- includes:
+  - include: "sample.yml"
+  - include: "sample2.yml"
 - tests:
 # testing examples
   - test:
